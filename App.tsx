@@ -3,6 +3,7 @@ import { fetchQuizQuestions } from './services/geminiService';
 import { QuizQuestion, GameState, DifficultyLevel, DIFFICULTY_LABELS } from './types';
 import { SauceTrap } from './components/SauceTrap';
 import { WorldMap } from './components/WorldMap';
+import { LegalModal } from './components/LegalModal';
 
 const MAX_MISTAKES = 4;
 const QUESTIONS_COUNT = 5;
@@ -22,6 +23,7 @@ const App: React.FC = () => {
     
     const [feedbackMessage, setFeedbackMessage] = useState<string>("");
     const [isShaking, setIsShaking] = useState(false);
+    const [showLegal, setShowLegal] = useState(false);
     
     // Ref for scrolling to top on new question
     const topRef = useRef<HTMLDivElement>(null);
@@ -108,7 +110,17 @@ const App: React.FC = () => {
     
     if (gameState.status === 'intro') {
         return (
-            <div className="min-h-screen w-full flex flex-col items-center py-12 px-4 bg-gradient-to-br from-orange-400 to-red-500">
+            <div className="min-h-screen w-full flex flex-col items-center py-12 px-4 bg-gradient-to-br from-orange-400 to-red-500 relative">
+                <LegalModal isOpen={showLegal} onClose={() => setShowLegal(false)} />
+                
+                {/* Legal Button Top Right */}
+                <button 
+                    onClick={() => setShowLegal(true)}
+                    className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 text-white text-xs font-bold py-2 px-3 rounded-lg backdrop-blur-sm transition-colors border border-white/30"
+                >
+                    ⚖️ Conformité
+                </button>
+
                 <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-6 sm:p-8 text-center border-b-8 border-orange-700 my-auto">
                     <div className="text-6xl sm:text-7xl mb-4 animate-bounce">🥘</div>
                     <h1 className="text-3xl sm:text-4xl font-extrabold text-orange-600 mb-2">Sauce Chef Quiz</h1>
@@ -126,6 +138,10 @@ const App: React.FC = () => {
                             </button>
                         ))}
                     </div>
+                </div>
+                
+                <div className="mt-8 text-white/60 text-xs text-center">
+                    En jouant, vous acceptez notre <button onClick={() => setShowLegal(true)} className="underline hover:text-white">Politique de Lanceur d'Alerte</button>.
                 </div>
             </div>
         );
