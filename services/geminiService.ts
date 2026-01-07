@@ -56,9 +56,7 @@ export const fetchQuizQuestions = async (count: number = 5, difficulty: Difficul
             }
         });
 
-        // Robust cleanup: Remove markdown code blocks if present
-        const cleanText = response.text?.replace(/```json|```/g, '').trim() || "[]";
-        const data = JSON.parse(cleanText);
+        const data = JSON.parse(response.text || "[]");
         return data as QuizQuestion[];
 
     } catch (error) {
